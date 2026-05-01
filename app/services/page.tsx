@@ -13,7 +13,6 @@ export default function ServicesPage() {
   const { lang } = useLanguage()
   const t = translations[lang]
   const [activeTab, setActiveTab] = useState<Tab>("discover")
-  // FIX 5: Reference to the tabs section for scroll-to-top on tab change
   const tabsSectionRef = useRef<HTMLDivElement>(null)
 
   const tabs: { key: Tab; label: string }[] = [
@@ -30,7 +29,6 @@ export default function ServicesPage() {
 
   const currentContent = content[activeTab]
 
-  // FIX 5: Handle tab change with scroll to top of tabs section
   const handleTabChange = (newTab: Tab) => {
     setActiveTab(newTab)
     setTimeout(() => {
@@ -40,15 +38,13 @@ export default function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-[#080810]">
-      {/* Background Grid */}
       <div className="fixed inset-0 bg-grid opacity-50 pointer-events-none" />
-      {/* Purple Atmosphere */}
       <div className="fixed inset-0 bg-purple-atmosphere pointer-events-none" />
-
       <Header />
 
       <main className="relative z-10 pt-28 lg:pt-36 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
           {/* Page Headline */}
           <h1
             className="text-center text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] mb-4"
@@ -62,18 +58,28 @@ export default function ServicesPage() {
             {t.services.subtitle}
           </p>
 
-          {/* FIX 5: Tab Navigation - with ref for scroll target */}
+          {/* ── Tabs — FIX: always horizontal (row) on ALL screen sizes ── */}
           <div ref={tabsSectionRef} className="scroll-mt-28 lg:scroll-mt-36">
-            <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-center gap-2 lg:gap-4 mb-10">
+            <div className="flex flex-row items-center justify-center gap-2 mb-10 overflow-x-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
                   onClick={() => handleTabChange(tab.key)}
-                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-250 ${
-                    activeTab === tab.key
-                      ? "bg-[rgba(83,27,107,0.3)] border-b-2 border-[#00FFA3] text-white"
-                      : "text-white/45 hover:text-white bg-transparent"
-                  }`}
+                  className={`
+                    flex-shrink-0
+                    px-4 py-2.5
+                    sm:px-6 sm:py-3
+                    rounded-lg
+                    text-xs sm:text-sm
+                    font-medium
+                    transition-all duration-250
+                    whitespace-nowrap
+                    ${
+                      activeTab === tab.key
+                        ? "bg-[rgba(83,27,107,0.3)] border-b-2 border-[#00FFA3] text-white"
+                        : "text-white/45 hover:text-white bg-transparent"
+                    }
+                  `}
                 >
                   {tab.label}
                 </button>
@@ -84,19 +90,14 @@ export default function ServicesPage() {
           {/* Tab Content */}
           <div
             key={activeTab}
-            className="glass-card p-8 lg:p-10 animate-fade-slide-up"
+            className="glass-card p-6 sm:p-8 lg:p-10 animate-fade-slide-up"
           >
-            {/* Sub-heading */}
             <h2 className="text-xl lg:text-2xl font-bold text-white mb-4">
               {currentContent.subheading}
             </h2>
-
-            {/* Body */}
             <p className="text-white/65 text-base leading-[1.7] mb-6">
               {currentContent.body}
             </p>
-
-            {/* Bullets */}
             <ul className="space-y-3 mb-6">
               {currentContent.bullets.map((bullet, index) => (
                 <li key={index} className="flex items-start gap-3">
@@ -105,11 +106,7 @@ export default function ServicesPage() {
                 </li>
               ))}
             </ul>
-
-            {/* Separator */}
             <div className="border-t border-white/[0.06] my-6" />
-
-            {/* FIX 5: Navigation with scroll-to-top on "Next" click */}
             {activeTab !== "deploy" ? (
               <button
                 onClick={() =>
@@ -125,6 +122,7 @@ export default function ServicesPage() {
               </Link>
             )}
           </div>
+
         </div>
       </main>
 
