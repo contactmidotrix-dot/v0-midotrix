@@ -64,9 +64,10 @@ export default function ServicesPage() {
               className="flex flex-row items-center justify-center gap-2 mb-10"
               style={{
                 overflowX: "auto",
-                // Hide scrollbar — all browsers
-                scrollbarWidth: "none",        /* Firefox */
-                msOverflowStyle: "none",       /* IE / Edge legacy */
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                paddingLeft: "4px",
+                paddingRight: "4px",
               }}
             >
               {/* Hide scrollbar for Chrome / Safari */}
