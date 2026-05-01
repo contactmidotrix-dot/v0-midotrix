@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -13,6 +13,7 @@ export default function ServicesPage() {
   const { lang } = useLanguage()
   const t = translations[lang]
   const [activeTab, setActiveTab] = useState<Tab>("discover")
+  const [scrollProgress, setScrollProgress] = useState(0)
   const tabsSectionRef = useRef<HTMLDivElement>(null)
 
   const tabs: { key: Tab; label: string }[] = [
@@ -29,6 +30,18 @@ export default function ServicesPage() {
 
   const currentContent = content[activeTab]
 
+  // Scroll progress for the indicator bar
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = docHeight > 0 ? scrollTop / docHeight : 0
+      setScrollProgress(Math.min(progress, 1))
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   const handleTabChange = (newTab: Tab) => {
     setActiveTab(newTab)
     setTimeout(() => {
@@ -40,6 +53,38 @@ export default function ServicesPage() {
     <div className="min-h-screen bg-[#080810]">
       <div className="fixed inset-0 bg-grid opacity-50 pointer-events-none" />
       <div className="fixed inset-0 bg-purple-atmosphere pointer-events-none" />
+
+      {/* ── Modern Scroll Indicator — glowing purple pill on right ── */}
+      <div
+        style={{
+          position: "fixed",
+          right: "14px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          zIndex: 40,
+          width: "3px",
+          height: "80px",
+          borderRadius: "99px",
+          background: "rgba(83,27,107,0.2)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Moving fill */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: `${scrollProgress * 100}%`,
+            borderRadius: "99px",
+            background: "linear-gradient(180deg, #7B2FBE 0%, #00FFA3 100%)",
+            boxShadow: "0 0 8px rgba(0,255,163,0.6), 0 0 16px rgba(83,27,107,0.8)",
+            transition: "height 0.1s ease",
+          }}
+        />
+      </div>
+
       <Header />
 
       <main className="relative z-10 pt-28 lg:pt-36 pb-20">
@@ -58,42 +103,65 @@ export default function ServicesPage() {
             {t.services.subtitle}
           </p>
 
-          {/* Tabs — horizontal on all screens, scrollbar hidden */}
+          {/* ── Tabs — FIX: padding-left so "D" is never clipped ── */}
           <div ref={tabsSectionRef} className="scroll-mt-28 lg:scroll-mt-36">
             <div
-              className="flex flex-row items-center justify-center gap-2 mb-10"
               style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                marginBottom: "40px",
                 overflowX: "auto",
+                // FIX: padding so first letter is never clipped
+                paddingLeft: "8px",
+                paddingRight: "8px",
+                paddingBottom: "2px",
+                // Hide scrollbar — all browsers
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
-                paddingLeft: "4px",
-                paddingRight: "4px",
               }}
             >
-              {/* Hide scrollbar for Chrome / Safari */}
               <style>{`
-                .tabs-row::-webkit-scrollbar { display: none; }
+                .tabs-scroll-row::-webkit-scrollbar { display: none; }
               `}</style>
 
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
                   onClick={() => handleTabChange(tab.key)}
-                  className={`
-                    flex-shrink-0
-                    px-4 py-2.5
-                    sm:px-6 sm:py-3
-                    rounded-lg
-                    text-xs sm:text-sm
-                    font-medium
-                    transition-all duration-250
-                    whitespace-nowrap
-                    ${
-                      activeTab === tab.key
-                        ? "bg-[rgba(83,27,107,0.3)] border-b-2 border-[#00FFA3] text-white"
-                        : "text-white/45 hover:text-white bg-transparent"
-                    }
-                  `}
+                  style={{
+                    flexShrink: 0,
+                    padding: "10px 20px",
+                    borderRadius: "8px",
+                    fontSize: "0.82rem",
+                    fontWeight: 500,
+                    whiteSpace: "nowrap",
+                    cursor: "pointer",
+                    border: "none",
+                    transition: "all 0.25s ease",
+                    fontFamily: "Inter, sans-serif",
+                    ...(activeTab === tab.key
+                      ? {
+                          background: "rgba(83,27,107,0.3)",
+                          borderBottom: "2px solid #00FFA3",
+                          color: "white",
+                        }
+                      : {
+                          background: "transparent",
+                          borderBottom: "2px solid transparent",
+                          color: "rgba(255,255,255,0.45)",
+                        }),
+                  }}
+                  onMouseEnter={(e) => {
+                    if (activeTab !== tab.key)
+                      e.currentTarget.style.color = "white"
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeTab !== tab.key)
+                      e.currentTarget.style.color = "rgba(255,255,255,0.45)"
+                  }}
                 >
                   {tab.label}
                 </button>
