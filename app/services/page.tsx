@@ -58,9 +58,22 @@ export default function ServicesPage() {
             {t.services.subtitle}
           </p>
 
-          {/* ── Tabs — FIX: always horizontal (row) on ALL screen sizes ── */}
+          {/* Tabs — horizontal on all screens, scrollbar hidden */}
           <div ref={tabsSectionRef} className="scroll-mt-28 lg:scroll-mt-36">
-            <div className="flex flex-row items-center justify-center gap-2 mb-10 overflow-x-auto">
+            <div
+              className="flex flex-row items-center justify-center gap-2 mb-10"
+              style={{
+                overflowX: "auto",
+                // Hide scrollbar — all browsers
+                scrollbarWidth: "none",        /* Firefox */
+                msOverflowStyle: "none",       /* IE / Edge legacy */
+              }}
+            >
+              {/* Hide scrollbar for Chrome / Safari */}
+              <style>{`
+                .tabs-row::-webkit-scrollbar { display: none; }
+              `}</style>
+
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
