@@ -24,13 +24,11 @@ export function Header() {
 
   const currentLang = languages.find((l) => l.code === lang)
 
-  // FIX 1: Logo click handler - scroll to top + navigate to /
   const handleLogoClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" })
     router.push("/")
   }
 
-  // FIX 2d: Close dropdown on outside click
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -41,14 +39,14 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handleOutsideClick)
   }, [langDropdownOpen])
 
-  // Home link translation
   const homeLabel = lang === "en" ? "Home" : lang === "fr" ? "Accueil" : "الرئيسية"
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[rgba(8,8,16,0.85)] border-b border-white/[0.06]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* FIX 1: Logo - clickable to scroll to top + navigate to / */}
+
+          {/* Logo */}
           <button
             onClick={handleLogoClick}
             className="flex items-center gap-2 cursor-pointer"
@@ -65,7 +63,6 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
-            {/* Nav Links */}
             <div className="flex items-center gap-6">
               <Link
                 href="/services"
@@ -83,7 +80,7 @@ export function Header() {
               </Link>
             </div>
 
-            {/* FIX 2: Language Toggle - Redesigned */}
+            {/* Language Toggle */}
             <div ref={dropdownRef} className="relative">
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
@@ -115,10 +112,7 @@ export function Header() {
                           setLangDropdownOpen(false)
                         }}
                         className="flex items-center w-full px-3.5 py-2.5 text-white/85 hover:text-white rounded-[7px] transition-colors"
-                        style={{
-                          fontSize: "0.88rem",
-                          fontFamily: "Inter, sans-serif",
-                        }}
+                        style={{ fontSize: "0.88rem", fontFamily: "Inter, sans-serif" }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = "rgba(83,27,107,0.4)"
                         }}
@@ -133,11 +127,8 @@ export function Header() {
               )}
             </div>
 
-            {/* CTA Button */}
-            <Link
-              href="/contact"
-              className="btn-primary !py-2.5 !px-5 text-sm"
-            >
+            {/* CTA */}
+            <Link href="/contact" className="btn-primary !py-2.5 !px-5 text-sm">
               {t.nav.cta}
             </Link>
           </nav>
@@ -153,57 +144,70 @@ export function Header() {
         </div>
       </div>
 
-      {/* FIX 3: Mobile Menu Overlay - Dark Opaque Background */}
+      {/* ✅ FIXED: Mobile Menu - Fully Opaque Dark Background */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
+
+          {/* Backdrop - near-black, fully opaque */}
           <div
             className="absolute inset-0"
-            style={{ background: "rgba(8, 5, 20, 0.98)", backdropFilter: "blur(20px)" }}
+            style={{
+              background: "rgba(5, 3, 15, 0.97)",
+              backdropFilter: "blur(8px)",
+            }}
             onClick={() => setMobileMenuOpen(false)}
           />
+
+          {/* Slide-in Panel */}
           <div
-            className={`absolute top-0 ${isRTL ? "left-0" : "right-0"} h-full w-[280px] p-6 animate-fade-slide-up`}
+            className={`absolute top-0 ${isRTL ? "left-0" : "right-0"} h-full w-[280px] p-6`}
             style={{
-              background: "#0D0818",
-              borderLeft: isRTL ? "none" : "1px solid rgba(255,255,255,0.1)",
-              borderRight: isRTL ? "1px solid rgba(255,255,255,0.1)" : "none",
+              background: "#0A0514",
+              borderLeft: isRTL ? "none" : "1px solid rgba(83,27,107,0.25)",
+              borderRight: isRTL ? "1px solid rgba(83,27,107,0.25)" : "none",
             }}
           >
+            {/* Close Button */}
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="absolute top-4 right-4 p-2 text-white/80 hover:text-white"
+              className="absolute top-4 right-4 p-2 text-white hover:text-[#00FFA3] transition-colors"
               aria-label="Close menu"
             >
               <X className="w-6 h-6" />
             </button>
 
             <div className="mt-12 flex flex-col gap-6">
-              {/* FIX 3b: Add Home link at top */}
+
+              {/* Home Link */}
               <button
                 onClick={() => {
                   handleLogoClick()
                   setMobileMenuOpen(false)
                 }}
-                className="text-lg text-white hover:text-white transition-colors text-left"
+                className="text-lg font-medium text-white hover:text-[#00FFA3] transition-colors text-left"
               >
                 {homeLabel}
               </button>
+
+              {/* Services */}
               <Link
                 href="/services"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-lg text-white hover:text-white transition-colors"
+                className="text-lg font-medium text-white hover:text-[#00FFA3] transition-colors"
               >
                 {t.nav.services}
               </Link>
+
+              {/* FAQ */}
               <Link
                 href="/faq"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-lg text-white hover:text-white transition-colors"
+                className="text-lg font-medium text-white hover:text-[#00FFA3] transition-colors"
               >
                 {t.nav.faq}
               </Link>
 
-              {/* Language Toggle Mobile - FIX 2: No flags, show full names only */}
+              {/* Language Toggle Mobile */}
               <div className="pt-4 border-t border-white/10">
                 <p className="text-xs text-white/40 mb-3 uppercase tracking-wider">
                   Language
@@ -216,10 +220,10 @@ export function Header() {
                         setLang(l.code)
                         setMobileMenuOpen(false)
                       }}
-                      className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                         lang === l.code
                           ? "bg-[rgba(83,27,107,0.5)] border border-[#531B6B] text-[#00FFA3]"
-                          : "bg-white/5 border border-white/10 text-white/70 hover:text-white"
+                          : "bg-white/5 border border-white/10 text-white hover:border-[#531B6B] hover:text-[#00FFA3]"
                       }`}
                     >
                       {l.label}
@@ -228,7 +232,7 @@ export function Header() {
                 </div>
               </div>
 
-              {/* CTA Button Mobile */}
+              {/* CTA */}
               <Link
                 href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
