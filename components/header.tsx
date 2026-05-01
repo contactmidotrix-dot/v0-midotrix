@@ -160,9 +160,9 @@ export function Header() {
 
           {/* Slide-in Panel */}
           <div
-            className={`absolute top-0 ${isRTL ? "left-0" : "right-0"} h-full w-[280px] p-6`}
+            className={`absolute top-0 ${isRTL ? "left-0" : "right-0"} h-full w-[280px] p-6 bg-[#0A0514]`}
             style={{
-              background: "#0A0514",
+              backgroundColor: "#0A0514",
               borderLeft: isRTL ? "none" : "1px solid rgba(83,27,107,0.25)",
               borderRight: isRTL ? "1px solid rgba(83,27,107,0.25)" : "none",
             }}
