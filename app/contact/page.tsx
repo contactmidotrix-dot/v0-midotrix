@@ -24,7 +24,6 @@ interface FormErrors {
   [key: string]: string
 }
 
-// FIX 11: Get local timestamp in user's timezone
 const getLocalTimestamp = () => {
   const now = new Date()
   return now.toLocaleString("en-GB", {
@@ -39,10 +38,38 @@ const getLocalTimestamp = () => {
   })
 }
 
+// ─── FIX: Budget labels — words instead of < > symbols ───────────────────────
+const getBudgetOptions = (lang: string) => {
+  if (lang === "ar") {
+    return [
+      "أقل من 10,000$",
+      "10,000$ – 50,000$",
+      "أكثر من 50,000$",
+      "لست متأكداً بعد",
+    ]
+  }
+  if (lang === "fr") {
+    return [
+      "Moins de 10 000$",
+      "10 000$ – 50 000$",
+      "Plus de 50 000$",
+      "Pas encore sûr",
+    ]
+  }
+  return [
+    "Less than $10k",
+    "$10k – $50k",
+    "More than $50k",
+    "Not sure yet",
+  ]
+}
+
 export default function ContactPage() {
   const { lang } = useLanguage()
   const t = translations[lang]
   const [state, handleFormspreeSubmit] = useForm("xpqkvzje")
+
+  const budgetOptions = getBudgetOptions(lang)
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -66,7 +93,6 @@ export default function ContactPage() {
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {}
-
     if (!formData.name.trim()) newErrors.name = t.contact.form.required
     if (!formData.email.trim()) {
       newErrors.email = t.contact.form.required
@@ -78,38 +104,26 @@ export default function ContactPage() {
     if (!formData.company_size) newErrors.company_size = t.contact.form.required
     if (!formData.challenge.trim()) newErrors.challenge = t.contact.form.required
     if (!formData.ai_vision) newErrors.ai_vision = t.contact.form.required
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = async () => {
     if (!validate()) return
-
     setIsSubmitting(true)
-
     try {
-      // FIX 11: Use local timestamp instead of ISO
       const timestamp = getLocalTimestamp()
-
-      // Submit to SheetMonkey
       await fetch("https://api.sheetmonkey.io/form/5vCAPkuDuo8YfQWQrzMnmZ", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          _timestamp: timestamp,
-        }),
+        body: JSON.stringify({ ...formData, _timestamp: timestamp }),
       })
-
-      // Submit to Formspree
       const formspreeData = new FormData()
       Object.entries(formData).forEach(([key, value]) => {
         formspreeData.append(key, value)
       })
       formspreeData.append("_subject", "New Project Request from Midotrix")
       formspreeData.append("_timestamp", timestamp)
-
       await handleFormspreeSubmit(formspreeData)
     } catch (error) {
       console.error("Form submission error:", error)
@@ -118,14 +132,9 @@ export default function ContactPage() {
     }
   }
 
-  const handleChange = (
-    field: keyof FormData,
-    value: string
-  ) => {
+  const handleChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }))
-    }
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }))
   }
 
   if (state.succeeded) {
@@ -152,29 +161,21 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-[#080810]">
-      {/* Background Grid */}
       <div className="fixed inset-0 bg-grid opacity-50 pointer-events-none" />
-      {/* Purple Atmosphere */}
       <div className="fixed inset-0 bg-purple-atmosphere pointer-events-none" />
-
       <Header />
 
       <main className="relative z-10 pt-28 lg:pt-36 pb-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Pre-title */}
           <p className="text-center text-[#00FFA3] text-xs font-semibold tracking-wider mb-4">
             {t.contact.preTitle}
           </p>
-
-          {/* Headline */}
           <h1
             className="text-center text-[clamp(2rem,5vw,3rem)] leading-[1.1] mb-4"
             style={{ fontFamily: "'Bebas Neue', sans-serif" }}
           >
             {t.contact.heading}
           </h1>
-
-          {/* Subtitle */}
           <p className="text-center text-white/60 text-sm max-w-[580px] mx-auto mb-10">
             {t.contact.subtitle}
           </p>
@@ -276,9 +277,7 @@ export default function ContactPage() {
                     errors.role ? "border-red-500" : "border-white/10"
                   }`}
                 >
-                  <option value="" className="bg-[#0D0D1A]">
-                    Select...
-                  </option>
+                  <option value="" className="bg-[#0D0D1A]">Select...</option>
                   {t.contact.form.roleOptions.map((option, i) => (
                     <option key={i} value={option} className="bg-[#0D0D1A]">
                       {option}
@@ -291,13 +290,13 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Budget Range */}
+            {/* ── Budget Range — FIX: words instead of < > symbols ── */}
             <div className="mt-6">
               <label className="block text-sm font-semibold text-white mb-3">
                 {t.contact.form.budget}
               </label>
               <div className="flex flex-wrap gap-2">
-                {t.contact.form.budgetOptions.map((option, i) => (
+                {budgetOptions.map((option, i) => (
                   <button
                     key={i}
                     type="button"
@@ -403,7 +402,7 @@ export default function ContactPage() {
               )}
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <button
               type="button"
               onClick={handleSubmit}
