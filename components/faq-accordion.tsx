@@ -13,6 +13,8 @@ export function FAQAccordion({ showHeading = true }: FAQAccordionProps) {
   const { lang } = useLanguage()
   const t = translations[lang]
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  // FIX 7: Track hovered index for chevron color change
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   const toggleItem = (index: number) => {
     setOpenIndex(openIndex === index ? null : index)
@@ -34,6 +36,8 @@ export function FAQAccordion({ showHeading = true }: FAQAccordionProps) {
             <div
               key={index}
               className="border-b border-white/[0.07]"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               <button
                 onClick={() => toggleItem(index)}
@@ -42,10 +46,14 @@ export function FAQAccordion({ showHeading = true }: FAQAccordionProps) {
                 <span className="text-white font-semibold text-base pr-4">
                   {item.question}
                 </span>
+                {/* FIX 7: ChevronDown turns #00FFA3 on hover */}
                 <ChevronDown
-                  className={`w-5 h-5 text-white/60 flex-shrink-0 transition-transform duration-300 ${
-                    openIndex === index ? "rotate-180" : ""
-                  }`}
+                  className="w-5 h-5 flex-shrink-0"
+                  style={{
+                    color: hoveredIndex === index ? "#00FFA3" : "rgba(255,255,255,0.5)",
+                    transition: "color 0.2s ease, transform 0.3s ease",
+                    transform: openIndex === index ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
                 />
               </button>
               <div

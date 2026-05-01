@@ -8,6 +8,38 @@ export function CTASection() {
   const { lang } = useLanguage()
   const t = translations[lang]
 
+  // FIX 8: Render the CTA headline with "build" and "growth" highlighted in mint
+  const renderHighlightedLine3 = () => {
+    // The structure: "We build for those who seek growth."
+    // Highlight "build" and "growth" in #00FFA3
+    if (lang === "en") {
+      return (
+        <>
+          We <span style={{ color: "#00FFA3" }}>build</span> for those who seek{" "}
+          <span style={{ color: "#00FFA3" }}>growth</span>.
+        </>
+      )
+    } else if (lang === "fr") {
+      // French: "Nous construisons pour ceux qui cherchent la croissance."
+      // Highlight "construisons" and "croissance"
+      return (
+        <>
+          Nous <span style={{ color: "#00FFA3" }}>construisons</span> pour ceux qui cherchent la{" "}
+          <span style={{ color: "#00FFA3" }}>croissance</span>.
+        </>
+      )
+    } else {
+      // Arabic: "نحن نبني لمن يسعون للنمو."
+      // Highlight "نبني" and "للنمو"
+      return (
+        <>
+          نحن <span style={{ color: "#00FFA3" }}>نبني</span> لمن يسعون{" "}
+          <span style={{ color: "#00FFA3" }}>للنمو</span>.
+        </>
+      )
+    }
+  }
+
   return (
     <section className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background Mesh */}
@@ -30,17 +62,14 @@ export function CTASection() {
       />
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Headline */}
+        {/* FIX 8: Headline with multi-word mint highlight */}
         <h2
           className="text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] mb-10"
           style={{ fontFamily: "'Bebas Neue', sans-serif" }}
         >
           <span className="block text-white">{t.cta.line1}</span>
           <span className="block text-white">{t.cta.line2}</span>
-          <span className="block text-white">
-            {t.cta.line3}
-            <span className="text-[#00FFA3]">{t.cta.highlight}</span>
-          </span>
+          <span className="block text-white">{renderHighlightedLine3()}</span>
         </h2>
 
         {/* CTA Button */}

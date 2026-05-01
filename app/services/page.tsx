@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -13,6 +13,8 @@ export default function ServicesPage() {
   const { lang } = useLanguage()
   const t = translations[lang]
   const [activeTab, setActiveTab] = useState<Tab>("discover")
+  // FIX 5: Reference to the tabs section for scroll-to-top on tab change
+  const tabsSectionRef = useRef<HTMLDivElement>(null)
 
   const tabs: { key: Tab; label: string }[] = [
     { key: "discover", label: t.services.tabs[0] },
@@ -27,6 +29,14 @@ export default function ServicesPage() {
   }
 
   const currentContent = content[activeTab]
+
+  // FIX 5: Handle tab change with scroll to top of tabs section
+  const handleTabChange = (newTab: Tab) => {
+    setActiveTab(newTab)
+    setTimeout(() => {
+      tabsSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+    }, 50)
+  }
 
   return (
     <div className="min-h-screen bg-[#080810]">
@@ -52,21 +62,23 @@ export default function ServicesPage() {
             {t.services.subtitle}
           </p>
 
-          {/* Tab Navigation */}
-          <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-center gap-2 lg:gap-4 mb-10">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-250 ${
-                  activeTab === tab.key
-                    ? "bg-[rgba(83,27,107,0.3)] border-b-2 border-[#00FFA3] text-white"
-                    : "text-white/45 hover:text-white bg-transparent"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+          {/* FIX 5: Tab Navigation - with ref for scroll target */}
+          <div ref={tabsSectionRef} className="scroll-mt-28 lg:scroll-mt-36">
+            <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-center gap-2 lg:gap-4 mb-10">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => handleTabChange(tab.key)}
+                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-250 ${
+                    activeTab === tab.key
+                      ? "bg-[rgba(83,27,107,0.3)] border-b-2 border-[#00FFA3] text-white"
+                      : "text-white/45 hover:text-white bg-transparent"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Tab Content */}
@@ -97,11 +109,11 @@ export default function ServicesPage() {
             {/* Separator */}
             <div className="border-t border-white/[0.06] my-6" />
 
-            {/* Navigation or CTA */}
+            {/* FIX 5: Navigation with scroll-to-top on "Next" click */}
             {activeTab !== "deploy" ? (
               <button
                 onClick={() =>
-                  setActiveTab(activeTab === "discover" ? "engineer" : "deploy")
+                  handleTabChange(activeTab === "discover" ? "engineer" : "deploy")
                 }
                 className="text-white/40 text-sm font-medium hover:text-white transition-colors"
               >

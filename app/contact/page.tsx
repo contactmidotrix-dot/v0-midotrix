@@ -24,6 +24,21 @@ interface FormErrors {
   [key: string]: string
 }
 
+// FIX 11: Get local timestamp in user's timezone
+const getLocalTimestamp = () => {
+  const now = new Date()
+  return now.toLocaleString("en-GB", {
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  })
+}
+
 export default function ContactPage() {
   const { lang } = useLanguage()
   const t = translations[lang]
@@ -74,7 +89,8 @@ export default function ContactPage() {
     setIsSubmitting(true)
 
     try {
-      const timestamp = new Date().toISOString()
+      // FIX 11: Use local timestamp instead of ISO
+      const timestamp = getLocalTimestamp()
 
       // Submit to SheetMonkey
       await fetch("https://api.sheetmonkey.io/form/5vCAPkuDuo8YfQWQrzMnmZ", {

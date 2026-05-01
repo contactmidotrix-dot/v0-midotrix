@@ -1,32 +1,58 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { Menu, X, ChevronDown } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 import { translations, type Language } from "@/lib/i18n"
 
-const languages: { code: Language; label: string; flag: string }[] = [
-  { code: "en", label: "EN", flag: "🇬🇧" },
-  { code: "fr", label: "Français", flag: "🇫🇷" },
-  { code: "ar", label: "عربية", flag: "🇸🇦" },
+const languages: { code: Language; label: string }[] = [
+  { code: "en", label: "English" },
+  { code: "fr", label: "Français" },
+  { code: "ar", label: "عربية" },
 ]
 
 export function Header() {
+  const router = useRouter()
   const { lang, setLang, isRTL } = useLanguage()
   const t = translations[lang]
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [langDropdownOpen, setLangDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const currentLang = languages.find((l) => l.code === lang)
+
+  // FIX 1: Logo click handler - scroll to top + navigate to /
+  const handleLogoClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+    router.push("/")
+  }
+
+  // FIX 2d: Close dropdown on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setLangDropdownOpen(false)
+      }
+    }
+    if (langDropdownOpen) document.addEventListener("mousedown", handleOutsideClick)
+    return () => document.removeEventListener("mousedown", handleOutsideClick)
+  }, [langDropdownOpen])
+
+  // Home link translation
+  const homeLabel = lang === "en" ? "Home" : lang === "fr" ? "Accueil" : "الرئيسية"
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[rgba(8,8,16,0.85)] border-b border-white/[0.06]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          {/* FIX 1: Logo - clickable to scroll to top + navigate to / */}
+          <button
+            onClick={handleLogoClick}
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <Image
               src="/logo.jpg"
               alt="Midotrix Logo"
@@ -35,7 +61,7 @@ export function Header() {
               className="rounded-full object-contain"
             />
             <span className="font-bold text-lg text-white">Midotrix</span>
-          </Link>
+          </button>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
@@ -57,21 +83,28 @@ export function Header() {
               </Link>
             </div>
 
-            {/* Language Toggle */}
-            <div className="relative">
+            {/* FIX 2: Language Toggle - Redesigned */}
+            <div ref={dropdownRef} className="relative">
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-white/20 transition-colors text-sm"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/[0.15] hover:border-white/25 transition-colors"
+                style={{ fontSize: "0.88rem" }}
               >
-                <span>{currentLang?.flag}</span>
-                <span className="text-white/80">{currentLang?.label}</span>
+                <span className="text-white font-medium">{currentLang?.label}</span>
                 <ChevronDown
-                  className={`w-3.5 h-3.5 text-white/60 transition-transform ${langDropdownOpen ? "rotate-180" : ""}`}
+                  className={`w-3.5 h-3.5 text-white/60 transition-transform duration-200 ${langDropdownOpen ? "rotate-180" : ""}`}
                 />
               </button>
 
               {langDropdownOpen && (
-                <div className="absolute top-full mt-2 right-0 glass-card p-2 min-w-[140px] animate-fade-slide-up">
+                <div
+                  className="absolute top-full mt-2 right-0 min-w-[140px] p-1.5 rounded-[10px] animate-fade-slide-up"
+                  style={{
+                    background: "#1A0D24",
+                    border: "1px solid rgba(83,27,107,0.5)",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
+                  }}
+                >
                   {languages
                     .filter((l) => l.code !== lang)
                     .map((l) => (
@@ -81,10 +114,19 @@ export function Header() {
                           setLang(l.code)
                           setLangDropdownOpen(false)
                         }}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        className="flex items-center w-full px-3.5 py-2.5 text-white/85 hover:text-white rounded-[7px] transition-colors"
+                        style={{
+                          fontSize: "0.88rem",
+                          fontFamily: "Inter, sans-serif",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "rgba(83,27,107,0.4)"
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "transparent"
+                        }}
                       >
-                        <span>{l.flag}</span>
-                        <span>{l.label}</span>
+                        {l.label}
                       </button>
                     ))}
                 </div>
@@ -111,15 +153,21 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* FIX 3: Mobile Menu Overlay - Dark Opaque Background */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0"
+            style={{ background: "rgba(8, 5, 20, 0.98)", backdropFilter: "blur(20px)" }}
             onClick={() => setMobileMenuOpen(false)}
           />
           <div
-            className={`absolute top-0 ${isRTL ? "left-0" : "right-0"} h-full w-[280px] bg-[#0D0D1A] border-${isRTL ? "r" : "l"} border-white/10 p-6 animate-fade-slide-up`}
+            className={`absolute top-0 ${isRTL ? "left-0" : "right-0"} h-full w-[280px] p-6 animate-fade-slide-up`}
+            style={{
+              background: "#0D0818",
+              borderLeft: isRTL ? "none" : "1px solid rgba(255,255,255,0.1)",
+              borderRight: isRTL ? "1px solid rgba(255,255,255,0.1)" : "none",
+            }}
           >
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -130,22 +178,32 @@ export function Header() {
             </button>
 
             <div className="mt-12 flex flex-col gap-6">
+              {/* FIX 3b: Add Home link at top */}
+              <button
+                onClick={() => {
+                  handleLogoClick()
+                  setMobileMenuOpen(false)
+                }}
+                className="text-lg text-white hover:text-white transition-colors text-left"
+              >
+                {homeLabel}
+              </button>
               <Link
                 href="/services"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-lg text-white/80 hover:text-white transition-colors"
+                className="text-lg text-white hover:text-white transition-colors"
               >
                 {t.nav.services}
               </Link>
               <Link
                 href="/faq"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-lg text-white/80 hover:text-white transition-colors"
+                className="text-lg text-white hover:text-white transition-colors"
               >
                 {t.nav.faq}
               </Link>
 
-              {/* Language Toggle Mobile */}
+              {/* Language Toggle Mobile - FIX 2: No flags, show full names only */}
               <div className="pt-4 border-t border-white/10">
                 <p className="text-xs text-white/40 mb-3 uppercase tracking-wider">
                   Language
@@ -158,14 +216,13 @@ export function Header() {
                         setLang(l.code)
                         setMobileMenuOpen(false)
                       }}
-                      className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-colors ${
+                      className={`px-3 py-2 rounded-lg text-sm transition-colors ${
                         lang === l.code
-                          ? "bg-[rgba(83,27,107,0.5)] border border-[#531B6B] text-white"
+                          ? "bg-[rgba(83,27,107,0.5)] border border-[#531B6B] text-[#00FFA3]"
                           : "bg-white/5 border border-white/10 text-white/70 hover:text-white"
                       }`}
                     >
-                      <span>{l.flag}</span>
-                      <span>{l.label}</span>
+                      {l.label}
                     </button>
                   ))}
                 </div>

@@ -139,7 +139,59 @@
   }
 }
 
-/* Gradient Text for Hero */
+/* FIX 4 & 10: Hero Headline Responsive Sizes */
+.hero-headline {
+  font-size: clamp(2.6rem, 4.2vw, 4rem);
+}
+
+.hero-subtext {
+  font-size: 1.05rem;
+}
+
+@media (max-width: 768px) {
+  .hero-headline {
+    font-size: clamp(1.7rem, 7vw, 2.4rem);
+    line-height: 1.1;
+  }
+  .hero-subtext {
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-headline {
+    font-size: clamp(1.5rem, 6.5vw, 2rem);
+  }
+}
+
+/* FIX 4b: Purple gradient on first 4 words of hero headline */
+.hero-gradient-text {
+  background: linear-gradient(90deg, #8B3DB0 0%, #A855CC 40%, rgba(255,255,255,0.95) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* BONUS C: About section heading refined size */
+.about-heading {
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+}
+
+.about-body {
+  font-size: 1.05rem;
+}
+
+@media (max-width: 768px) {
+  .about-heading {
+    font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+  }
+  .about-body {
+    font-size: 0.95rem;
+  }
+}
+
+/* Legacy gradient text for backwards compatibility */
 .gradient-text {
   background: linear-gradient(90deg, rgba(160, 80, 200, 0.9) 0%, rgba(255, 255, 255, 1) 35%);
   -webkit-background-clip: text;
