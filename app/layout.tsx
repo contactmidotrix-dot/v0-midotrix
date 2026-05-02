@@ -78,6 +78,29 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased bg-[#080810] text-white">
         <LanguageProvider>
+          {/*
+           * ── GLOBAL PURPLE GLOW — top of every page ──────────────────────
+           * A single soft radial glow at the very top-center of the viewport.
+           * Looks like a subtle light source bleeding from above.
+           * NOT a grid. NOT full-page color. Just atmosphere.
+           */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "fixed",
+              top: "-120px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "900px",
+              height: "600px",
+              borderRadius: "50%",
+              background:
+                "radial-gradient(ellipse at center, rgba(83,27,107,0.28) 0%, rgba(83,27,107,0.08) 45%, transparent 72%)",
+              pointerEvents: "none",
+              zIndex: 0,
+              // No grid — clean atmosphere only
+            }}
+          />
           {children}
         </LanguageProvider>
         {process.env.NODE_ENV === "production" && <Analytics />}
