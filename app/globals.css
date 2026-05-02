@@ -73,13 +73,12 @@
 
 /* ─────────────────────────────────────────────────────────────────────────────
    BG-GRID — REMOVED GLOBALLY
-   The old .bg-grid class is intentionally deleted.
-   The grid now exists ONLY in the About section via .bg-about-section below.
-   Any remaining <div className="... bg-grid ..."> in page files is now inert
-   because this class no longer has any styles.
+   ALL elements with .bg-grid class are hidden, regardless of where they appear.
+   No need to edit individual page files — this one CSS rule handles everything.
 ───────────────────────────────────────────────────────────────────────────── */
+.fixed.inset-0.bg-grid,
 .bg-grid {
-  /* Intentionally empty — grid removed from all pages */
+  display: none !important;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
