@@ -199,7 +199,7 @@ export default function ServicesPage() {
                 {currentContent.next}
               </button>
             ) : (
-              <Link href="/contact" className="btn-primary inline-block">
+              <Link href="/free-analysis" className="btn-primary inline-block">
                 {t.nav.cta}
               </Link>
             )}

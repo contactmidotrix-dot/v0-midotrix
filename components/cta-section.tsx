@@ -8,33 +8,27 @@ export function CTASection() {
   const { lang } = useLanguage()
   const t = translations[lang]
 
-  // FIX 8: Render the CTA headline with "build" and "growth" highlighted in mint
+  // Render the CTA headline's third line with the closing phrase highlighted in mint
   const renderHighlightedLine3 = () => {
-    // The structure: "We build for those who seek growth."
-    // Highlight "build" and "growth" in #00FFA3
     if (lang === "en") {
+      // "We help you know for sure."
       return (
         <>
-          We <span style={{ color: "#00FFA3" }}>build</span> for those who seek{" "}
-          <span style={{ color: "#00FFA3" }}>growth</span>.
+          We help you <span style={{ color: "#00FFA3" }}>know for sure</span>.
         </>
       )
     } else if (lang === "fr") {
-      // French: "Nous construisons pour ceux qui cherchent la croissance."
-      // Highlight "construisons" and "croissance"
+      // "Nous vous aidons à en être certain."
       return (
         <>
-          Nous <span style={{ color: "#00FFA3" }}>construisons</span> pour ceux qui cherchent la{" "}
-          <span style={{ color: "#00FFA3" }}>croissance</span>.
+          Nous vous aidons à <span style={{ color: "#00FFA3" }}>en être certain</span>.
         </>
       )
     } else {
-      // Arabic: "نحن نبني لمن يسعون للنمو."
-      // Highlight "نبني" and "للنمو"
+      // "نساعدك أن تعرف بيقين."
       return (
         <>
-          نحن <span style={{ color: "#00FFA3" }}>نبني</span> لمن يسعون{" "}
-          <span style={{ color: "#00FFA3" }}>للنمو</span>.
+          نساعدك أن <span style={{ color: "#00FFA3" }}>تعرف بيقين</span>.
         </>
       )
     }
@@ -74,7 +68,7 @@ export function CTASection() {
 
         {/* CTA Button */}
         <Link
-          href="/contact"
+          href="/free-analysis"
           className="btn-primary inline-block !py-4 !px-10 !text-base"
           style={{
             boxShadow:

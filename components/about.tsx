@@ -83,7 +83,7 @@ export function About() {
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          <Link href="/contact" className="btn-primary inline-block">
+          <Link href="/free-analysis" className="btn-primary inline-block">
             {t.nav.cta}
           </Link>
         </div>

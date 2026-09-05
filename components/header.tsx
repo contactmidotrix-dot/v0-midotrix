@@ -209,6 +209,28 @@ export function Header() {
                   {t.nav.faq}
                 </Link>
 
+                {/* Free Analysis */}
+                <Link
+                  href="/free-analysis"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    fontSize: "1.1rem",
+                    fontWeight: 500,
+                    color: "white",
+                    textDecoration: "none",
+                    fontFamily: "Inter, sans-serif",
+                    transition: "color 0.2s ease",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "#00FFA3")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "white")
+                  }
+                >
+                  {t.nav.freeAnalysis}
+                </Link>
+
                 {/* Language Toggle */}
                 <div
                   style={{
@@ -263,7 +285,7 @@ export function Header() {
 
                 {/* CTA */}
                 <Link
-                  href="/contact"
+                  href="/free-analysis"
                   onClick={() => setMobileMenuOpen(false)}
                   className="btn-primary"
                   style={{ textAlign: "center", marginTop: "8px" }}
@@ -313,6 +335,13 @@ export function Header() {
                   className="text-white/70 hover:text-white transition-colors text-sm font-medium relative group"
                 >
                   {t.nav.faq}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#00FFA3] transition-all group-hover:w-full" />
+                </Link>
+                <Link
+                  href="/free-analysis"
+                  className="text-white/70 hover:text-white transition-colors text-sm font-medium relative group"
+                >
+                  {t.nav.freeAnalysis}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#00FFA3] transition-all group-hover:w-full" />
                 </Link>
               </div>
@@ -374,7 +403,7 @@ export function Header() {
 
               {/* CTA */}
               <Link
-                href="/contact"
+                href="/free-analysis"
                 className="btn-primary !py-2.5 !px-5 text-sm"
               >
                 {t.nav.cta}

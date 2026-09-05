@@ -30,10 +30,13 @@ export function Hero() {
     setLoaded(true)
   }, [])
 
-  // FIX 4b: Split headline - first 4 words get purple gradient, rest is white
-  const words = t.hero.headline.split(" ")
-  const gradientWords = words.slice(0, 4).join(" ")
-  const whiteWords = words.slice(4).join(" ")
+  // Split headline using the explicit headlineHighlight prefix (language-safe:
+  // does not assume a fixed word count, since translations vary in length)
+  const headline = t.hero.headline
+  const highlight = t.hero.headlineHighlight
+  const startsWithHighlight = highlight && headline.startsWith(highlight)
+  const gradientWords = startsWithHighlight ? highlight : headline
+  const whiteWords = startsWithHighlight ? headline.slice(highlight.length) : ""
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -85,7 +88,7 @@ export function Hero() {
           }`}
           style={{ fontFamily: "'Bebas Neue', sans-serif" }}
         >
-          <span className="hero-gradient-text">{gradientWords} </span>
+          <span className="hero-gradient-text">{gradientWords}</span>
           <span className="text-white">{whiteWords}</span>
         </h1>
 
@@ -98,15 +101,21 @@ export function Hero() {
           {t.hero.subheadline}
         </p>
 
-        {/* CTA Button */}
+        {/* CTA Buttons */}
         <div
-          className={`${
+          className={`flex flex-col sm:flex-row items-center justify-center gap-4 ${
             loaded ? "animate-fade-slide-up animation-delay-400" : "opacity-0"
           }`}
         >
-          <Link href="/contact" className="btn-primary inline-block">
+          <Link href="/free-analysis" className="btn-primary inline-block">
             {t.nav.cta}
           </Link>
+          <a
+            href="#reconflow"
+            className="inline-block px-6 py-3 rounded-lg text-sm font-semibold text-white/70 border border-white/20 hover:border-white/40 hover:text-white transition-colors"
+          >
+            {t.hero.secondaryCta}
+          </a>
         </div>
       </div>
 

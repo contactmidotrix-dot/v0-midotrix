@@ -19,32 +19,32 @@ const bebasNeue = Bebas_Neue({
 })
 
 export const metadata: Metadata = {
-  title: "Midotrix | Intelligent Chat Agents for Ambitious Businesses",
+  title: "Midotrix | Financial Reconciliation for Restaurants — ReconFlow",
   description:
-    "We engineer bespoke AI chat agents that integrate directly into your business operations. Build, train, and deploy a digital mind tailored to your unique workflow.",
+    "Midotrix builds ReconFlow, a financial reconciliation system for restaurants and restaurant chains in the Gulf. We compare your POS and delivery platform data to find the revenue you're silently losing.",
   keywords: [
-    "AI chat agents",
-    "conversational AI",
-    "business automation",
-    "chatbot development",
-    "AI agency",
-    "customer service automation",
+    "restaurant reconciliation",
+    "revenue leakage restaurants",
+    "delivery platform settlement",
+    "POS reconciliation",
+    "ReconFlow",
+    "restaurant finance automation Gulf",
   ],
   authors: [{ name: "Midotrix" }],
   creator: "Midotrix",
   openGraph: {
-    title: "Midotrix | Intelligent Chat Agents for Ambitious Businesses",
+    title: "Midotrix | Financial Reconciliation for Restaurants — ReconFlow",
     description:
-      "We engineer bespoke AI chat agents that integrate directly into your business operations.",
+      "ReconFlow compares your restaurant's POS and delivery platform data to uncover missing settlements, unexpected settlements, and revenue leakage.",
     url: "https://midotrix.com",
     siteName: "Midotrix",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Midotrix | Intelligent Chat Agents",
+    title: "Midotrix | Financial Reconciliation for Restaurants",
     description:
-      "We engineer bespoke AI chat agents that integrate directly into your business operations.",
+      "ReconFlow compares your restaurant's POS and delivery platform data to uncover revenue leakage — free trial analysis available.",
   },
 }
 

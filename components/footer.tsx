@@ -73,6 +73,14 @@ export function Footer() {
                   {t.nav.faq}
                 </a>
               </li>
+              <li>
+                <a
+                  href="/free-analysis"
+                  className="text-sm text-white/50 hover:text-white transition-colors"
+                >
+                  {t.nav.freeAnalysis}
+                </a>
+              </li>
             </ul>
           </div>
 

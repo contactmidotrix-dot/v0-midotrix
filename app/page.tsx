@@ -3,6 +3,9 @@
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
 import { PainPoints } from "@/components/pain-points"
+import { LoomShowcase } from "@/components/loom-showcase"
+import { ReconflowShowcase } from "@/components/reconflow-showcase"
+import { SampleResults } from "@/components/sample-results"
 import { About } from "@/components/about"
 import { Framework } from "@/components/framework"
 import { FAQAccordion } from "@/components/faq-accordion"
@@ -20,6 +23,9 @@ export default function HomePage() {
       <main>
         <Hero />
         <PainPoints />
+        <LoomShowcase />
+        <ReconflowShowcase />
+        <SampleResults />
         <About />
         <Framework />
         <FAQAccordion />

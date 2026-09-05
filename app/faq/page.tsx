@@ -46,7 +46,7 @@ export default function FAQPage() {
 
         {/* CTA Button */}
         <div className="text-center pb-20">
-          <Link href="/contact" className="btn-primary inline-block">
+          <Link href="/free-analysis" className="btn-primary inline-block">
             {t.nav.cta}
           </Link>
         </div>
